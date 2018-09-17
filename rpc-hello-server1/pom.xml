@@ -4,18 +4,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.weimob</groupId>
-    <artifactId>rpc-hello-server</artifactId>
+    <artifactId>rpc-hello-server1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>rpc-hello-server</name>
+    <name>rpc-hello-server1</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.5.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <artifactId>rpc</artifactId>
+        <groupId>com.weimob</groupId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -29,6 +28,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

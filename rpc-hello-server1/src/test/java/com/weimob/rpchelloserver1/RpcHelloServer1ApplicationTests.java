@@ -1,4 +1,4 @@
-package com.weimob.rpchelloserver;
+package com.weimob.rpchelloserver1;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RpcHelloServerApplicationTests {
+public class RpcHelloServer1ApplicationTests {
 
     @Test
     public void contextLoads() {
