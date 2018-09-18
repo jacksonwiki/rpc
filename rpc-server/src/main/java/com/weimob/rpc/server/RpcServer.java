@@ -64,21 +64,21 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     ChannelPipeline pipeline = socketChannel.pipeline();
-                    pipeline.addLast(new RpcDecode(RpcResponse.class));
-                    pipeline.addLast(new RpcEncode(RpcRequest.class));
+                    pipeline.addLast(new RpcDecode(RpcRequest.class));
+                    pipeline.addLast(new RpcEncode(RpcResponse.class));
                     pipeline.addLast(new RpcServerHandler(handlerMap));
 
                 }
             }).option(ChannelOption.SO_BACKLOG, 512).childOption(ChannelOption.SO_KEEPALIVE, true);
 
             ChannelFuture future = b.bind(port).sync();
-            logger.debug("server started, listening on {}", port);
+            logger.info("server started, listening on {}", port);
 
             // 注册 RPC 服务地址
-            String serviceAddress = InetAddress.getLocalHost().getAddress() + ":" + port;
+            String serviceAddress = InetAddress.getLocalHost().getHostAddress() + ":" + port;
             for (String interfaceName : handlerMap.keySet()) {
                 serviceRegistry.register(interfaceName, serviceAddress);
-                logger.debug("register service: {} => {}", interfaceName, serviceAddress);
+                logger.info("register service: {} => {}", interfaceName, serviceAddress);
             }
 
             // 释放资源
@@ -96,11 +96,9 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         /* 扫描带有 @RpcService 注解的服务类 */
         Map<String, Object> serverBeanMap = ctx.getBeansWithAnnotation(RpcService.class);
         if (MapUtils.isNotEmpty(serverBeanMap)) {
-            for (Object serviceBean : serverBeanMap.keySet()) {
-                RpcService annotation = serverBeanMap.get(serviceBean).getClass().getAnnotation(RpcService.class);
-
+            for (Object serviceBean : serverBeanMap.values()) {
+                RpcService annotation = serviceBean.getClass().getAnnotation(RpcService.class);
                 String serviceName = annotation.value().getName();
-
                 handlerMap.put(serviceName, serviceBean);
             }
         }

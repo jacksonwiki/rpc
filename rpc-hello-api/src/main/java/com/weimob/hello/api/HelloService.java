@@ -10,5 +10,10 @@ package com.weimob.hello.api;
  */
 public interface HelloService {
 
+    /**
+     * s
+     * @param name
+     * @return
+     */
     String say(String name);
 }

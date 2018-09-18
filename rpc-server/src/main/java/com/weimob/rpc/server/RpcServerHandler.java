@@ -22,9 +22,9 @@ import java.util.Map;
 public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
     private static final Logger logger = LoggerFactory.getLogger(RpcServerHandler.class);
 
-    private Map handlerMap;
+    private  final Map<String, Object> handlerMap;
 
-    public RpcServerHandler(Map handlerMap) {
+    public RpcServerHandler(Map<String, Object> handlerMap) {
         this.handlerMap = handlerMap;
     }
 
@@ -55,16 +55,18 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
      * @throws Exception
      */
     private Object handle(RpcRequest rpcRequest) throws Exception {
-        String interfaceName = rpcRequest.getInterfaceName();
-        Object serviceBean = this.handlerMap.get(interfaceName);
+        String serviceName = rpcRequest.getInterfaceName();
 
-        Class<?> serviceBeanClass = serviceBean.getClass();
+        Object serviceBean = this.handlerMap.get(serviceName);
+        if (serviceBean == null) {
+            throw new RuntimeException(String.format("can not find service bean by key: %s", serviceName));
+        }
+        Class<?> serviceClass = serviceBean.getClass();
         // 接口 方法 参数 参数类型
         String methodName = rpcRequest.getMethodName();
         Class<?>[] parameterTypes = rpcRequest.getParameterTypes();
         Object[] parameters = rpcRequest.getParameters();
-
-        Method method = serviceBeanClass.getMethod(methodName, parameterTypes);
+        Method method = serviceClass.getMethod(methodName, parameterTypes);
 
         method.setAccessible(true);
         return method.invoke(serviceBean,parameters);
