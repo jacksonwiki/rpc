@@ -38,7 +38,10 @@ public class ServiceDiscovery {
             List<String> children = zkClient.getChildren(servicePath);
             int size = children.size();
             String address;
-            if (size == 1) {
+            if (size == 0){
+                logger.debug("no interface Provider node,please check service is it normal!");
+                throw new RuntimeException("no interface Provider node,please check service is it normal!");
+            }else if (size == 1) {
                 address = children.get(0);
                 logger.debug("get only address node: {}", address);
             } else {
